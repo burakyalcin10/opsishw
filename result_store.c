@@ -28,6 +28,8 @@ void result_store_put(result_store_t *store, int task_id, const char *output) {
         strncpy(store->entries[slot].output, output, 255);
         store->entries[slot].output[255] = '\0';
         store->entries[slot].valid = 1;
+    } else {
+        fprintf(stderr, "WARNING: Result store full! Task %d result lost.\n", task_id);
     }
     
     pthread_mutex_unlock(&store->mutex);

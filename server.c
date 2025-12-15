@@ -16,7 +16,9 @@ result_store_t result_store;
 int next_task_id = 1;
 pthread_mutex_t id_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_t workers[NUM_WORKERS];
-int server_initialized = 0;
+
+/* Thread-safe initialization using pthread_once */
+pthread_once_t init_once = PTHREAD_ONCE_INIT;
 
 /* Worker thread function */
 void *worker_thread(void *arg) {
@@ -42,10 +44,8 @@ void *worker_thread(void *arg) {
     return NULL;
 }
 
-/* Initialize server resources */
-void server_init() {
-    if (server_initialized) return;
-    
+/* Initialize server resources (called once via pthread_once) */
+void server_init_impl() {
     /* Initialize task queue and result store */
     task_queue_init(&task_queue);
     result_store_init(&result_store);
@@ -56,17 +56,19 @@ void server_init() {
     }
     
     printf("Server started with %d worker threads\n", NUM_WORKERS);
-    server_initialized = 1;
+}
+
+/* Thread-safe server initialization wrapper */
+void server_init() {
+    pthread_once(&init_once, server_init_impl);
 }
 
 /* RPC procedure: Submit a task */
 int *submit_task_1_svc(task *argp, struct svc_req *rqstp) {
     static int result_id;
     
-    /* Initialize server on first call */
-    if (!server_initialized) {
-        server_init();
-    }
+    /* Ensure server is initialized (thread-safe) */
+    server_init();
     
     /* Generate unique task ID */
     pthread_mutex_lock(&id_mutex);
@@ -90,10 +92,8 @@ result *get_result_1_svc(int *argp, struct svc_req *rqstp) {
     static result res;
     static char outbuf[256];
     
-    /* Initialize server if not done (prevents crash) */
-    if (!server_initialized) {
-        server_init();
-    }
+    /* Ensure server is initialized (thread-safe) */
+    server_init();
     
     res.id = *argp;
     
