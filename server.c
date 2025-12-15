@@ -88,18 +88,24 @@ int *submit_task_1_svc(task *argp, struct svc_req *rqstp) {
 /* RPC procedure: Get result for a task */
 result *get_result_1_svc(int *argp, struct svc_req *rqstp) {
     static result res;
-    char output[256];
+    static char outbuf[256];
+    
+    /* Initialize server if not done (prevents crash) */
+    if (!server_initialized) {
+        server_init();
+    }
     
     res.id = *argp;
     
     /* Try to get result from store */
-    if (result_store_get(&result_store, *argp, output)) {
-        /* Result is ready */
-        res.output = strdup(output);
+    if (result_store_get(&result_store, *argp, outbuf)) {
+        /* Result is ready - outbuf already filled */
     } else {
         /* Result not ready yet */
-        res.output = strdup("PENDING");
+        strncpy(outbuf, "PENDING", sizeof(outbuf));
+        outbuf[255] = '\0';
     }
     
+    res.output = outbuf;
     return &res;
 }

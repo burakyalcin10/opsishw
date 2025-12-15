@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
             task t;
             char payload[256];
             
+            t.id = 0;  /* Will be set by server */
             t.type = choice;
             
             if (choice == 1) {
