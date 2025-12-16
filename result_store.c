@@ -42,7 +42,8 @@ int result_store_get(result_store_t *store, int task_id, char *output) {
     int found = 0;
     for (int i = 0; i < MAX_RESULTS; i++) {
         if (store->entries[i].valid && store->entries[i].task_id == task_id) {
-            strcpy(output, store->entries[i].output);
+            strncpy(output, store->entries[i].output, 255);
+            output[255] = '\0';
             found = 1;
             break;
         }

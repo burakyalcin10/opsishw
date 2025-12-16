@@ -1,7 +1,7 @@
 # Multithreaded RPC-Based Distributed Task Processing System
 
 **Course**: CSE 303 Fundamentals of Operating Systems  
-**Assignment**: Multithreaded RPC Task Processor
+**Assignment**: Multithreaded RPC Task Processing System
 
 ## Overview
 
@@ -230,20 +230,11 @@ The client provides an interactive menu:
 - **Worker Threads**: Fixed pool of 3 threads (configurable via `NUM_WORKERS`)
 - **Queue Size**: Unlimited (dynamic linked list)
 - **Result Storage**: Supports up to 1000 results (configurable via `MAX_RESULTS`)
-- **RPC Protocol**: Supports both UDP and TCP
+- **RPC Protocol**: Uses TCP for reliable communication
 
-## Grading Criteria Compliance
-
-| Criterion | Implementation | Status |
-|-----------|----------------|--------|
-| RPC interface and rpcgen usage | `task.x` with proper struct and program definitions | ✓ |
-| Thread-safe task queue | Mutex + condition variable protected FIFO | ✓ |
-| Worker thread correctness | 3 threads, proper synchronization | ✓ |
-| Correct task processing | All 3 types with exact output format | ✓ |
-| Reliable client-server interaction | Proper RPC calls, error handling | ✓ |
-| Code quality + documentation | Clean code, comprehensive README | ✓ |
 
 ## Author
 
-CSE 303 Student  
+CSE 303 
+Burak Yalçın 20220808069
 Fall 2025

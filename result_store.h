@@ -9,7 +9,7 @@
 /* Storage entry for a task result */
 typedef struct {
     int task_id;
-    char output[256];
+    char output[257];
     int valid;  /* 1 if result is stored, 0 otherwise */
 } result_entry_t;
 

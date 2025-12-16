@@ -58,7 +58,7 @@ task_clnt.o: task_clnt.c $(RPC_HEADERS)
 	$(CC) $(CFLAGS) -c task_clnt.c
 
 task_xdr.o: task_xdr.c $(RPC_HEADERS)
-	$(CC) $(CFLAGS) -c task_xdr.c
+	$(CC) $(CFLAGS) -Wno-unused-variable -c task_xdr.c
 
 # Clean build artifacts
 clean:

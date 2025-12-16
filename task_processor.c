@@ -30,7 +30,7 @@ void reverse_string(const char *input, char *output) {
 
 void sum_integers(const char *input, char *output) {
     int sum = 0;
-    char buffer[256];
+    char buffer[257];
     strncpy(buffer, input, 255);
     buffer[255] = '\0';
     

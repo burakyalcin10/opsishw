@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         if (choice >= 1 && choice <= 3) {
             /* Submit a task */
             task t;
-            char payload[256];
+            char payload[257];
             
             t.id = 0;  /* Will be set by server */
             t.type = choice;

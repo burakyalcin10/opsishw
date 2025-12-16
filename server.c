@@ -27,7 +27,7 @@ void *worker_thread(void *arg) {
         task t = task_queue_pop(&task_queue);
         
         /* Process the task */
-        char output[256];
+        char output[257];
         process_task(&t, output);
         
         /* Store the result */
@@ -97,7 +97,7 @@ int *submit_task_1_svc(task *argp, struct svc_req *rqstp) {
 /* RPC procedure: Get result for a task */
 result *get_result_1_svc(int *argp, struct svc_req *rqstp) {
     static result res;
-    static char outbuf[256];
+    static char outbuf[257];
     
     /* Ensure server is initialized (thread-safe) */
     server_init();
