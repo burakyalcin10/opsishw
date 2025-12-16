@@ -1,4 +1,5 @@
 #include "result_store.h"
+#include <stdio.h>
 #include <string.h>
 
 void result_store_init(result_store_t *store) {

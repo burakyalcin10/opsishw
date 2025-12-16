@@ -63,12 +63,18 @@ void server_init() {
     pthread_once(&init_once, server_init_impl);
 }
 
+/* Mutex for RPC handler static variables (thread-safety) */
+pthread_mutex_t rpc_handler_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 /* RPC procedure: Submit a task */
 int *submit_task_1_svc(task *argp, struct svc_req *rqstp) {
     static int result_id;
     
     /* Ensure server is initialized (thread-safe) */
     server_init();
+    
+    /* Lock for static variable protection */
+    pthread_mutex_lock(&rpc_handler_mutex);
     
     /* Generate unique task ID */
     pthread_mutex_lock(&id_mutex);
@@ -84,6 +90,7 @@ int *submit_task_1_svc(task *argp, struct svc_req *rqstp) {
     printf("Task %d submitted (type %d, payload: %s)\n", 
            result_id, argp->type, argp->payload);
     
+    pthread_mutex_unlock(&rpc_handler_mutex);
     return &result_id;
 }
 
@@ -94,6 +101,9 @@ result *get_result_1_svc(int *argp, struct svc_req *rqstp) {
     
     /* Ensure server is initialized (thread-safe) */
     server_init();
+    
+    /* Lock for static variable protection */
+    pthread_mutex_lock(&rpc_handler_mutex);
     
     res.id = *argp;
     
@@ -107,5 +117,7 @@ result *get_result_1_svc(int *argp, struct svc_req *rqstp) {
     }
     
     res.output = outbuf;
+    
+    pthread_mutex_unlock(&rpc_handler_mutex);
     return &res;
 }

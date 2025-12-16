@@ -99,6 +99,8 @@ int main(int argc, char *argv[]) {
                 clnt_perror(clnt, "get_result_1 failed");
             } else {
                 printf("Task %d result: %s\n", res->id, res->output);
+                /* Free XDR-allocated memory to prevent leak */
+                clnt_freeres(clnt, (xdrproc_t)xdr_result, (caddr_t)res);
             }
             
         } else {
